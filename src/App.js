@@ -7,6 +7,7 @@ import ProductDetails from './pages/ProductDetails';
 import Checkout from './pages/Checkout';
 import addProductLocalStorage from './services/addProductLocalStorage';
 import { getProductsFromCategoryAndQuery } from './services/api';
+import Header from './components/Header';
 
 class App extends React.Component {
   constructor() {
@@ -103,9 +104,10 @@ class App extends React.Component {
   };
 
   render() {
-    const { cartList, cartLength, productList, loading } = this.state;
+    const { cartList, cartLength, productList, loading, totalPrice } = this.state;
     return (
       <BrowserRouter>
+        <Header cartLength={ cartLength } />
         <Switch>
           <Route
             path="/product/:id"
@@ -113,7 +115,6 @@ class App extends React.Component {
               <ProductDetails
                 { ...props }
                 handleClick={ this.handleClick }
-                cartLength={ cartLength }
               />
             ) }
           />
@@ -125,12 +126,19 @@ class App extends React.Component {
                 cartList={ cartList }
                 decrementQuantity={ this.decrementQuantity }
                 handleClick={ this.handleClick }
+                totalPrice={ totalPrice }
               />
             ) }
           />
-          <Route path="/checkout">
-            <Checkout cartList={ cartList } />
-          </Route>
+          <Route
+            path="/checkout"
+            render={ (props) => (
+              <Checkout
+                { ...props }
+                cartList={ cartList }
+              />
+            ) }
+          />
           <Route path="/">
             <Home
               handleClick={ this.handleClick }
